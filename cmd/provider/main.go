@@ -25,10 +25,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	"github.com/crossplane/crossplane-runtime/pkg/logging"
-	"github.com/crossplane/crossplane-runtime/pkg/ratelimiter"
 
-	"github.com/crossplane-contrib/provider-github/apis"
-	"github.com/crossplane-contrib/provider-github/pkg/controller"
+	"github.com/lacroi-m/provider-github/apis"
 )
 
 func main() {
@@ -57,11 +55,11 @@ func main() {
 	mgr, err := ctrl.NewManager(cfg, ctrl.Options{
 		LeaderElection:   *leaderElection,
 		LeaderElectionID: "crossplane-leader-election-provider-github",
-		SyncPeriod:       syncPeriod,
+		// SyncPeriod:       syncPeriod,
 	})
 	kingpin.FatalIfError(err, "Cannot create controller manager")
 
 	kingpin.FatalIfError(apis.AddToScheme(mgr.GetScheme()), "Cannot add GitHub APIs to scheme")
-	kingpin.FatalIfError(controller.Setup(mgr, log, ratelimiter.NewDefaultProviderRateLimiter(ratelimiter.DefaultProviderRPS)), "Cannot setup GitHub controllers")
+	// kingpin.FatalIfError(controller.Setup(mgr, log, ratelimiter.NewDefaultProviderRateLimiter(ratelimiter.DefaultProviderRPS)), "Cannot setup GitHub controllers")
 	kingpin.FatalIfError(mgr.Start(ctrl.SetupSignalHandler()), "Cannot start controller manager")
 }

@@ -37,7 +37,7 @@ var (
 	SchemeBuilder = &scheme.Builder{GroupVersion: SchemeGroupVersion}
 )
 
-// ProviderConfig type metadata.
+// Provider type metadata.
 var (
 	ProviderConfigKind             = reflect.TypeOf(ProviderConfig{}).Name()
 	ProviderConfigGroupKind        = schema.GroupKind{Group: Group, Kind: ProviderConfigKind}.String()

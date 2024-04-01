@@ -24,15 +24,41 @@ import (
 
 // A ProviderConfigSpec defines the desired state of a ProviderConfig.
 type ProviderConfigSpec struct {
+	// Base URL of the Github Service
+	BaseURL string `json:"baseURL,omitempty"`
+
 	// Credentials required to authenticate to this provider.
 	Credentials ProviderCredentials `json:"credentials"`
+
+	// InsecureSkipVerify ignores self signed TLS certificates when connecting
+	// to Github.
+	InsecureSkipVerify *bool `json:"insecureSkipVerify,omitempty"`
 }
+
+// AuthType represents an authentication type within Github.
+type AuthType string
+
+const (
+	// TODO: implement BasicAuth structure with Username and Password
+	// BasicAuth github BasicAuth method of authentification
+	//	BasicAuth AuthType = "BasicAuth"
+
+	// JobToken github JobToken method of authentification
+	JobToken AuthType = "JobToken"
+
+	// OAuthToken github OAuthToken method of authentification
+	OAuthToken AuthType = "OAuthToken"
+
+	// PrivateToken github PrivateToken method of authentification.
+	PrivateToken AuthType = "PrivateToken"
+)
 
 // ProviderCredentials required to authenticate.
 type ProviderCredentials struct {
 	// Source of the provider credentials.
-	// +kubebuilder:validation:Enum=None;Secret;Environment;Filesystem
+	// +kubebuilder:validation:Enum=None;Secret;InjectedIdentity;Environment;Filesystem
 	Source xpv1.CredentialsSource `json:"source"`
+	Method AuthType               `json:"method"`
 
 	xpv1.CommonCredentialSelectors `json:",inline"`
 }
@@ -44,9 +70,9 @@ type ProviderConfigStatus struct {
 
 // +kubebuilder:object:root=true
 
-// A ProviderConfig configures how AWS controllers will connect to AWS API.
+// A ProviderConfig configures how github controller should connect to Github API.
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:printcolumn:name="SECRET-NAME",type="string",JSONPath=".spec.credentialsSecretRef.name",priority=1
+// +kubebuilder:printcolumn:name="SECRET-NAME",type="string",JSONPath=".spec.credentials.secretRef.name",priority=1
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,provider,github}
 // +kubebuilder:subresource:status
 type ProviderConfig struct {

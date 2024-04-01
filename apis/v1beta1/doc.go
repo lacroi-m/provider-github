@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package v1beta1 contains the core resources of GitHub.
+// Package v1beta1 contains the core resources of the github provider.
 // +kubebuilder:object:generate=true
 // +groupName=github.crossplane.io
 // +versionName=v1beta1
