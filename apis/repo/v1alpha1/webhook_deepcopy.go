@@ -6,12 +6,18 @@ import (
 
 func (in *WebhookParameters) DeepCopyInto(out *WebhookParameters) {
 	*out = *in
-	in.ConfigurableField = out.ConfigurableField
+	in.Repository = out.Repository
+	in.Owner = out.Owner
+	in.Token = out.Token
+	in.URL = out.URL
 }
 
 func (in *WebhookObservation) DeepCopyInto(out *WebhookObservation) {
 	*out = *in
-	in.ObservableField = out.ObservableField
+	if in.CreatedAt != nil {
+		in, out := &in.CreatedAt, &out.CreatedAt
+		*out = (*in).DeepCopy()
+	}
 }
 
 func (in *WebhookSpec) DeepCopyInto(out *WebhookSpec) {

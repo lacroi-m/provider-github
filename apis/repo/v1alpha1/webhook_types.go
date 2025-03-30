@@ -17,22 +17,34 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"reflect"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 
 	xpv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
 // WebhookParameters are the configurable fields of a Webhook.
 type WebhookParameters struct {
-	ConfigurableField string `json:"configurableField"`
+	// Repository is the
+	Repository *string
+
+	// Owner is the owner or organization of the repository
+	Owner *string
+
+	// TODO: move the token to a secret
+	// Token is the github token used to register the webhook
+	Token *string
+
+	// URL is the target of the webhook
+	URL *string `json:"url"`
 }
 
-// WebhookObservation are the observable fields of a Webhook.
+// WebhookObservation represents a project hook.
 type WebhookObservation struct {
-	ObservableField string `json:"observableField,omitempty"`
+	// ID of the project hook at github
+	ID int `json:"id,omitempty"`
+
+	// CreatedAt specifies the time the project hook was created
+	CreatedAt *metav1.Time `json:"createdAt,omitempty"`
 }
 
 // A WebhookSpec defines the desired state of a Webhook.
@@ -71,16 +83,4 @@ type WebhookList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []Webhook `json:"items"`
-}
-
-// Webhook type metadata.
-var (
-	WebhookKind             = reflect.TypeOf(Webhook{}).Name()
-	WebhookGroupKind        = schema.GroupKind{Group: Group, Kind: WebhookKind}.String()
-	WebhookKindAPIVersion   = WebhookKind + "." + SchemeGroupVersion.String()
-	WebhookGroupVersionKind = SchemeGroupVersion.WithKind(WebhookKind)
-)
-
-func init() {
-	SchemeBuilder.Register(&Webhook{}, &WebhookList{})
 }

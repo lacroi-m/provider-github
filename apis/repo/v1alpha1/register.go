@@ -16,18 +16,20 @@ limitations under the License.
 
 // Package v1alpha1 contains the v1alpha1 group Sample resources of the provider-github provider.
 // +kubebuilder:object:generate=true
-// +groupName=repo.github.crossplane.io.provider-github.crossplane.io
+// +groupName=repo.github.crossplane.io
 // +versionName=v1alpha1
 package v1alpha1
 
 import (
+	"reflect"
+
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
 )
 
 // Package type metadata.
 const (
-	Group   = "repo.github.crossplane.io.provider-github.crossplane.io"
+	Group   = "repo.github.crossplane.io"
 	Version = "v1alpha1"
 )
 
@@ -38,3 +40,15 @@ var (
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: SchemeGroupVersion}
 )
+
+// Webhook type metadata.
+var (
+	WebhookKind             = reflect.TypeOf(Webhook{}).Name()
+	WebhookGroupKind        = schema.GroupKind{Group: Group, Kind: WebhookKind}.String()
+	WebhookKindAPIVersion   = WebhookKind + "." + SchemeGroupVersion.String()
+	WebhookGroupVersionKind = SchemeGroupVersion.WithKind(WebhookKind)
+)
+
+func init() {
+	SchemeBuilder.Register(&Webhook{}, &WebhookList{})
+}
